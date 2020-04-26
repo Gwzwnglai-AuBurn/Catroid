@@ -33,7 +33,7 @@
               android:orientation="vertical"
               tools:ignore="Overdraw" >
 
-    <ListView
+    <org.catrobat.catroid.ui.dragndrop.BrickListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -42,12 +42,13 @@
         android:divider="@android:color/transparent" />
 
     <ImageButton
-        android:id="@+id/add_user_brick"
+        android:id="@+id/button_add_user_brick"
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_height"
         android:layout_weight="0"
         android:layout_gravity="center|bottom"
         android:background="@drawable/button_background_selector"
-        android:src="@drawable/ic_plus"/>
+        android:src="@drawable/ic_plus"
+        tools:ignore="ContentDescription"/>
 
 </LinearLayout>

@@ -63,6 +63,7 @@ import org.catrobat.catroid.content.bricks.ChangeYByNBrick;
 import org.catrobat.catroid.content.bricks.ChooseCameraBrick;
 import org.catrobat.catroid.content.bricks.ClearBackgroundBrick;
 import org.catrobat.catroid.content.bricks.ClearGraphicEffectBrick;
+import org.catrobat.catroid.content.bricks.ClearUserListBrick;
 import org.catrobat.catroid.content.bricks.CloneBrick;
 import org.catrobat.catroid.content.bricks.ComeToFrontBrick;
 import org.catrobat.catroid.content.bricks.DeleteItemOfUserListBrick;
@@ -184,6 +185,7 @@ import org.catrobat.catroid.content.bricks.TurnLeftBrick;
 import org.catrobat.catroid.content.bricks.TurnLeftSpeedBrick;
 import org.catrobat.catroid.content.bricks.TurnRightBrick;
 import org.catrobat.catroid.content.bricks.TurnRightSpeedBrick;
+import org.catrobat.catroid.content.bricks.UserDefinedBrick;
 import org.catrobat.catroid.content.bricks.VibrationBrick;
 import org.catrobat.catroid.content.bricks.WaitBrick;
 import org.catrobat.catroid.content.bricks.WaitTillIdleBrick;
@@ -272,7 +274,7 @@ public class CategoryBricksFactory {
 			return setupEmbroideryCategoryList();
 		}
 		if (category.equals(context.getString(R.string.category_assertions))) {
-			return setupAssertionsCategoryList();
+			return setupAssertionsCategoryList(context);
 		}
 
 		return Collections.emptyList();
@@ -341,15 +343,14 @@ public class CategoryBricksFactory {
 		if (SettingsFragment.isNfcSharedPreferenceEnabled(context)) {
 			controlBrickList.add(new SetNfcTagBrick(context.getString(R.string.brick_set_nfc_tag_default_value)));
 		}
-		if (BuildConfig.FEATURE_WEBREQUEST_BRICK_ENABLED) {
-			controlBrickList.add(new WebRequestBrick(context.getString(R.string.brick_web_request_default_value)));
-		}
 
 		return controlBrickList;
 	}
 
 	private List<Brick> setupUserBricksCategoryList() {
-		return new ArrayList<>();
+		List<Brick> userdDefinedBrickList = new ArrayList<>();
+		userdDefinedBrickList.add(new UserDefinedBrick());
+		return userdDefinedBrickList;
 	}
 
 	private List<Brick> setupChromecastCategoryList(Context context) {
@@ -510,18 +511,19 @@ public class CategoryBricksFactory {
 		dataBrickList.add(new ReadVariableFromDeviceBrick());
 		dataBrickList.add(new AddItemToUserListBrick(BrickValues.ADD_ITEM_TO_USERLIST));
 		dataBrickList.add(new DeleteItemOfUserListBrick(BrickValues.DELETE_ITEM_OF_USERLIST));
+		dataBrickList.add(new ClearUserListBrick());
 		dataBrickList.add(new InsertItemIntoUserListBrick(BrickValues.INSERT_ITEM_INTO_USERLIST_VALUE,
 				BrickValues.INSERT_ITEM_INTO_USERLIST_INDEX));
 		dataBrickList.add(new ReplaceItemInUserListBrick(BrickValues.REPLACE_ITEM_IN_USERLIST_VALUE,
 				BrickValues.REPLACE_ITEM_IN_USERLIST_INDEX));
 		dataBrickList.add(new WriteListOnDeviceBrick());
 		dataBrickList.add(new ReadListFromDeviceBrick());
-		dataBrickList.add(new AskBrick(context.getString(R.string.brick_ask_default_question)));
-		dataBrickList.add(new AskSpeechBrick(context.getString(R.string.brick_ask_speech_default_question)));
-
 		if (BuildConfig.FEATURE_WEBREQUEST_BRICK_ENABLED) {
 			dataBrickList.add(new WebRequestBrick(context.getString(R.string.brick_web_request_default_value)));
 		}
+		dataBrickList.add(new AskBrick(context.getString(R.string.brick_ask_default_question)));
+		dataBrickList.add(new AskSpeechBrick(context.getString(R.string.brick_ask_speech_default_question)));
+
 		return dataBrickList;
 	}
 
@@ -658,7 +660,7 @@ public class CategoryBricksFactory {
 		return embroideryBrickList;
 	}
 
-	private List<Brick> setupAssertionsCategoryList() {
+	private List<Brick> setupAssertionsCategoryList(Context context) {
 		List<Brick> assertionsBrickList = new ArrayList<>();
 
 		AssertEqualsBrick assertEqualsBrick = new AssertEqualsBrick();
@@ -681,6 +683,9 @@ public class CategoryBricksFactory {
 					}
 				}
 			}
+		}
+		if (BuildConfig.FEATURE_WEBREQUEST_BRICK_ENABLED) {
+			assertionsBrickList.add(new WebRequestBrick(context.getString(R.string.brick_web_request_default_value)));
 		}
 
 		return assertionsBrickList;
@@ -799,7 +804,7 @@ public class CategoryBricksFactory {
 			}
 		}
 
-		categoryBricks = setupAssertionsCategoryList();
+		categoryBricks = setupAssertionsCategoryList(context);
 		for (Brick categoryBrick : categoryBricks) {
 			if (brick.getClass().equals(categoryBrick.getClass())) {
 				category = res.getString(R.string.category_assertions);

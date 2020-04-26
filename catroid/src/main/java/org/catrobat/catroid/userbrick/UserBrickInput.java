@@ -1,6 +1,6 @@
 /*
  * Catroid: An on-device visual programming system for Android devices
- * Copyright (C) 2010-2018 The Catrobat Team
+ * Copyright (C) 2010-2020 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,30 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.catroid.test.stage;
+package org.catrobat.catroid.userbrick;
 
-import org.catrobat.catroid.stage.StageListener;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.catrobat.catroid.common.Nameable;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+public class UserBrickInput implements UserBrickData {
 
-import static org.catrobat.catroid.stage.StageListener.SCREENSHOT_AUTOMATIC_FILE_NAME;
-import static org.junit.Assert.assertFalse;
+	Nameable input;
 
-@RunWith(AndroidJUnit4.class)
-public class InvalidSaveScreenshotTest {
-	private StageListener stageListener;
-
-	@Before
-	public void setUp() throws Exception {
-		stageListener = new StageListener();
+	public UserBrickInput(Nameable input) {
+		this.input = input;
 	}
 
-	@Test
-	public void testInvalidScreenshotSave() {
-		stageListener = new StageListener();
-		assertFalse(stageListener.saveScreenshot(null, SCREENSHOT_AUTOMATIC_FILE_NAME));
+	public Nameable getInput() {
+		return this.input;
 	}
 }
